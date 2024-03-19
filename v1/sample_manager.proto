@@ -4,6 +4,7 @@ option go_package = "./";
 
 service SampleManager {
     rpc CreateSampleMapping (SampleMappingRequest) returns (SampleMappingResponse) {}
+    rpc UpdateSampleMapping (SampleMappingRequest) returns (SampleMappingResponse) {}
     rpc GetSampleSKUs (GetSampleSKUsRequest) returns (GetSampleSKUsResponse) {}
 }
 
@@ -14,7 +15,7 @@ message SampleMappingRequest{
 }
 
 message SampleMappingResponse{
-    string ID = 1;
+    int64 ID = 1;
     string sampleProductID = 2;
     string productID = 3;
     string customerSegment = 4;

@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SampleManagerClient interface {
 	CreateSampleMapping(ctx context.Context, in *SampleMappingRequest, opts ...grpc.CallOption) (*SampleMappingResponse, error)
+	UpdateSampleMapping(ctx context.Context, in *SampleMappingRequest, opts ...grpc.CallOption) (*SampleMappingResponse, error)
 	GetSampleSKUs(ctx context.Context, in *GetSampleSKUsRequest, opts ...grpc.CallOption) (*GetSampleSKUsResponse, error)
 }
 
@@ -43,6 +44,15 @@ func (c *sampleManagerClient) CreateSampleMapping(ctx context.Context, in *Sampl
 	return out, nil
 }
 
+func (c *sampleManagerClient) UpdateSampleMapping(ctx context.Context, in *SampleMappingRequest, opts ...grpc.CallOption) (*SampleMappingResponse, error) {
+	out := new(SampleMappingResponse)
+	err := c.cc.Invoke(ctx, "/SampleManager/UpdateSampleMapping", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sampleManagerClient) GetSampleSKUs(ctx context.Context, in *GetSampleSKUsRequest, opts ...grpc.CallOption) (*GetSampleSKUsResponse, error) {
 	out := new(GetSampleSKUsResponse)
 	err := c.cc.Invoke(ctx, "/SampleManager/GetSampleSKUs", in, out, opts...)
@@ -57,6 +67,7 @@ func (c *sampleManagerClient) GetSampleSKUs(ctx context.Context, in *GetSampleSK
 // for forward compatibility
 type SampleManagerServer interface {
 	CreateSampleMapping(context.Context, *SampleMappingRequest) (*SampleMappingResponse, error)
+	UpdateSampleMapping(context.Context, *SampleMappingRequest) (*SampleMappingResponse, error)
 	GetSampleSKUs(context.Context, *GetSampleSKUsRequest) (*GetSampleSKUsResponse, error)
 	mustEmbedUnimplementedSampleManagerServer()
 }
@@ -67,6 +78,9 @@ type UnimplementedSampleManagerServer struct {
 
 func (UnimplementedSampleManagerServer) CreateSampleMapping(context.Context, *SampleMappingRequest) (*SampleMappingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSampleMapping not implemented")
+}
+func (UnimplementedSampleManagerServer) UpdateSampleMapping(context.Context, *SampleMappingRequest) (*SampleMappingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSampleMapping not implemented")
 }
 func (UnimplementedSampleManagerServer) GetSampleSKUs(context.Context, *GetSampleSKUsRequest) (*GetSampleSKUsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSampleSKUs not implemented")
@@ -102,6 +116,24 @@ func _SampleManager_CreateSampleMapping_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SampleManager_UpdateSampleMapping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SampleMappingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SampleManagerServer).UpdateSampleMapping(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/SampleManager/UpdateSampleMapping",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SampleManagerServer).UpdateSampleMapping(ctx, req.(*SampleMappingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SampleManager_GetSampleSKUs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetSampleSKUsRequest)
 	if err := dec(in); err != nil {
@@ -130,6 +162,10 @@ var SampleManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateSampleMapping",
 			Handler:    _SampleManager_CreateSampleMapping_Handler,
+		},
+		{
+			MethodName: "UpdateSampleMapping",
+			Handler:    _SampleManager_UpdateSampleMapping_Handler,
 		},
 		{
 			MethodName: "GetSampleSKUs",
