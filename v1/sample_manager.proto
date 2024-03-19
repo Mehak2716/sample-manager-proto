@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option go_package = "./";
+
+service SampleManager {
+    rpc CreateSampleMapping (SampleMappingRequest) returns (SampleMappingResponse) {}
+    rpc GetSampleSKUs (GetSampleSKUsRequest) returns (GetSampleSKUsResponse) {}
+}
+
+message SampleMappingRequest{
+    string sampleProductID = 1;
+    string productID = 2;
+    string customerSegment = 3;
+}
+
+message SampleMappingResponse{
+    string ID = 1;
+    string sampleProductID = 2;
+    string productID = 3;
+    string customerSegment = 4;
+    Error error = 5;
+}
+
+message GetSampleSKUsRequest{
+    repeated string customerSegments = 1;
+    repeated string productIDs = 2;
+}
+
+message GetSampleSKUsResponse{
+     repeated string sampleSKUs = 1;
+     Error Error = 2;
+}
+
+message Error{
+    int32 code = 1;
+    string message = 2;
+}
+
+//protoc --go_out=. --go-grpc_out=. sample_manager.proto
