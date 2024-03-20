@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type SampleManagerClient interface {
 	CreateSampleMapping(ctx context.Context, in *SampleMappingRequest, opts ...grpc.CallOption) (*SampleMappingResponse, error)
 	UpdateSampleMapping(ctx context.Context, in *SampleMappingRequest, opts ...grpc.CallOption) (*SampleMappingResponse, error)
-	GetSampleSKUs(ctx context.Context, in *GetSampleSKUsRequest, opts ...grpc.CallOption) (*GetSampleSKUsResponse, error)
+	GetSampleIDs(ctx context.Context, in *GetSampleIDsRequest, opts ...grpc.CallOption) (*GetSampleIDsResponse, error)
 }
 
 type sampleManagerClient struct {
@@ -53,9 +53,9 @@ func (c *sampleManagerClient) UpdateSampleMapping(ctx context.Context, in *Sampl
 	return out, nil
 }
 
-func (c *sampleManagerClient) GetSampleSKUs(ctx context.Context, in *GetSampleSKUsRequest, opts ...grpc.CallOption) (*GetSampleSKUsResponse, error) {
-	out := new(GetSampleSKUsResponse)
-	err := c.cc.Invoke(ctx, "/SampleManager/GetSampleSKUs", in, out, opts...)
+func (c *sampleManagerClient) GetSampleIDs(ctx context.Context, in *GetSampleIDsRequest, opts ...grpc.CallOption) (*GetSampleIDsResponse, error) {
+	out := new(GetSampleIDsResponse)
+	err := c.cc.Invoke(ctx, "/SampleManager/GetSampleIDs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *sampleManagerClient) GetSampleSKUs(ctx context.Context, in *GetSampleSK
 type SampleManagerServer interface {
 	CreateSampleMapping(context.Context, *SampleMappingRequest) (*SampleMappingResponse, error)
 	UpdateSampleMapping(context.Context, *SampleMappingRequest) (*SampleMappingResponse, error)
-	GetSampleSKUs(context.Context, *GetSampleSKUsRequest) (*GetSampleSKUsResponse, error)
+	GetSampleIDs(context.Context, *GetSampleIDsRequest) (*GetSampleIDsResponse, error)
 	mustEmbedUnimplementedSampleManagerServer()
 }
 
@@ -82,8 +82,8 @@ func (UnimplementedSampleManagerServer) CreateSampleMapping(context.Context, *Sa
 func (UnimplementedSampleManagerServer) UpdateSampleMapping(context.Context, *SampleMappingRequest) (*SampleMappingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSampleMapping not implemented")
 }
-func (UnimplementedSampleManagerServer) GetSampleSKUs(context.Context, *GetSampleSKUsRequest) (*GetSampleSKUsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSampleSKUs not implemented")
+func (UnimplementedSampleManagerServer) GetSampleIDs(context.Context, *GetSampleIDsRequest) (*GetSampleIDsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSampleIDs not implemented")
 }
 func (UnimplementedSampleManagerServer) mustEmbedUnimplementedSampleManagerServer() {}
 
@@ -134,20 +134,20 @@ func _SampleManager_UpdateSampleMapping_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SampleManager_GetSampleSKUs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetSampleSKUsRequest)
+func _SampleManager_GetSampleIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSampleIDsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SampleManagerServer).GetSampleSKUs(ctx, in)
+		return srv.(SampleManagerServer).GetSampleIDs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/SampleManager/GetSampleSKUs",
+		FullMethod: "/SampleManager/GetSampleIDs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SampleManagerServer).GetSampleSKUs(ctx, req.(*GetSampleSKUsRequest))
+		return srv.(SampleManagerServer).GetSampleIDs(ctx, req.(*GetSampleIDsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -168,8 +168,8 @@ var SampleManager_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SampleManager_UpdateSampleMapping_Handler,
 		},
 		{
-			MethodName: "GetSampleSKUs",
-			Handler:    _SampleManager_GetSampleSKUs_Handler,
+			MethodName: "GetSampleIDs",
+			Handler:    _SampleManager_GetSampleIDs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
